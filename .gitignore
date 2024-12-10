@@ -74,3 +74,6 @@ sftp-config*
 
 # Mac OS
 *.DS_Store
+
+venv
+.idea
