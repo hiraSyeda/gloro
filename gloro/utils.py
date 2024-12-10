@@ -20,11 +20,10 @@ def add_extra_column_np(y):
 
 
 def set_value(x, value):
-    value = np.asarray(value, dtype=x.dtype.base_dtype.name)
-
-    with ops.init_scope():
-        x.assign(value)
-
+    # Safely handle dtype
+    dtype = getattr(x.dtype, 'base_dtype', x.dtype) if hasattr(x.dtype, 'base_dtype') else x.dtype
+    value = np.asarray(value, dtype=dtype.name if hasattr(dtype, 'name') else dtype)
+    x.assign(value)  # Ensure the value is correctly assigned to the tf.Variable
 
 def batch_set_value(tuples):
     with ops.init_scope():

@@ -84,7 +84,7 @@ def train_gloro(
     g.compile(
         loss=losses.get(loss),
         optimizer=get_optimizer(optimizer, lr), 
-        metrics=[clean_acc, vra, rejection_rate],
+        metrics=[rejection_rate],
     )
     g.fit(
         train,
@@ -121,11 +121,15 @@ if __name__ == '__main__':
     ):
         # Select the GPU and allow memory growth to avoid taking all the RAM.
         gpus = tf.config.experimental.list_physical_devices('GPU')
-        tf.config.experimental.set_visible_devices(gpus[gpu], 'GPU')
-        device = gpus[gpu]
-
-        for device in tf.config.experimental.get_visible_devices('GPU'):
-            tf.config.experimental.set_memory_growth(device, True)
+        if gpus:
+            try:
+                tf.config.experimental.set_visible_devices(gpus[gpu], device_type='GPU')
+                for device in tf.config.experimental.get_visible_devices('GPU'):
+                    tf.config.experimental.set_memory_growth(device, enable=True)
+            except RuntimeError as e:
+                print(f"Error setting GPU configurations: {e}")
+        else:
+            print("No GPUs found. Running on CPU.")
 
         g = train_gloro(
             dataset,

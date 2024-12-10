@@ -245,7 +245,7 @@ class GloroNet(Model):
         # boundary with class i, where i != j.
         radius_i = tf.where(
             tf.equal(y, y_j),
-            np.infty + tf.zeros_like(y),
+            np.inf + tf.zeros_like(y),
             margins / K_ij,
         )
 
@@ -281,7 +281,7 @@ class GloroNet(Model):
         # being negative.
         y_bot_i = tf.where(
             tf.equal(y, y_j),
-            -np.infty + tf.zeros_like(y_bot_i),
+            -np.inf + tf.zeros_like(y_bot_i),
             y_bot_i,
         )
 
