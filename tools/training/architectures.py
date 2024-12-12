@@ -7,6 +7,7 @@ from gloro.layers import InvertibleDownsampling
 from gloro.layers import LiResNetBlock
 from gloro.layers import MaxPooling2D
 from gloro.layers import MinMax
+from gloro.layers import ReLU
 
 
 def Activation(activation_type='minmax'):
@@ -337,3 +338,28 @@ def liresnet_C18CC2F(
         stem_downsample=stem_downsample,
     )
 
+
+def custom_dense(
+        input_shape,
+        num_classes,
+        activation='relu',
+        initialization='glorot_uniform',
+):
+    """
+    Defines a simple feedforward network with one hidden layer.
+
+    Parameters:
+    - input_shape: Shape of the input.
+    - num_classes: Number of output classes.
+    - activation: Activation function to use ('relu' by default).
+    - initialization: Weight initialization method.
+
+    Returns:
+    - Input and output layers of the network.
+    """
+    x = Input(input_shape)
+    z = Flatten()(x)  # Flatten the input for the dense layers
+    z = Dense(200, kernel_initializer=initialization)(z)
+    z = Activation(activation)(z)
+    y = Dense(num_classes, kernel_initializer=initialization)(z)
+    return x, y
