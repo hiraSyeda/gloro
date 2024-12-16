@@ -12,7 +12,7 @@ flatbuffers==24.3.25
 fonttools==4.55.3
 fsspec==2024.10.0
 gast==0.6.0
--e git+ssh://git@github.com/hiraSyeda/gloro.git@4d8dad7a7bb7e0a63d41996ec6452039afa68ed9#egg=gloro
+-e git+ssh://git@github.com/hiraSyeda/gloro.git@102a5cd28d1c0473ca60840bb89ce6626f809edd#egg=gloro
 google-pasta==0.2.0
 grpcio==1.68.1
 h5py==3.12.1
