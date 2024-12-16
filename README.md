@@ -1,3 +1,31 @@
+### To Run the Training Gloro and Keras Model (Dense-NN with one hidden layer)
+
+1. **Clone the repository**  
+   Clone the repository from GitHub and navigate to the project directory:
+   ```bash
+   git clone git@github.com:hiraSyeda/gloro.git
+   cd gloro
+   ```
+2. **Create and activate a virtual environment**  
+   Set up a virtual environment to isolate dependencies:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies**  
+   ```bash
+   cd tools/training
+   pip install -e ../../.
+   ```
+
+4. **Run the script**  
+   ```bash
+   python nn-dense-mnist.py
+   ```
+Outputs are stored in the outputs/ folder.
+
+
 # gloro
 Library for training provably-robust neural networks.
 
