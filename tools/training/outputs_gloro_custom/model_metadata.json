@@ -1,8 +1,0 @@
-{
-    "architecture": "custom_dense",
-    "epsilon": 1.58,
-    "epochs": 6,
-    "batch_size": 512,
-    "test_loss": 1.3914333581924438,
-    "test_rejection_rate": 0.6743508577346802
-}

@@ -1,0 +1,64 @@
+{
+    "input_nodes": [
+        28,
+        28,
+        1
+    ],
+    "hidden_nodes": 200,
+    "output_nodes": 10,
+    "accuracy": 0.9693999886512756,
+    "optimizer": {
+        "name": "adam",
+        "learning_rate": 0.0010000000474974513,
+        "weight_decay": null,
+        "clipnorm": null,
+        "global_clipnorm": null,
+        "clipvalue": null,
+        "use_ema": false,
+        "ema_momentum": 0.99,
+        "ema_overwrite_frequency": null,
+        "loss_scale_factor": null,
+        "gradient_accumulation_steps": null,
+        "beta_1": 0.9,
+        "beta_2": 0.999,
+        "epsilon": 1e-07,
+        "amsgrad": false
+    },
+    "layers": [
+        {
+            "name": "input_layer_1",
+            "weights_shape": null,
+            "biases_shape": null
+        },
+        {
+            "name": "flatten_1",
+            "weights_shape": null,
+            "biases_shape": null
+        },
+        {
+            "name": "dense_2",
+            "weights_shape": [
+                784,
+                200
+            ],
+            "biases_shape": [
+                200
+            ]
+        },
+        {
+            "name": "re_lu_1",
+            "weights_shape": null,
+            "biases_shape": null
+        },
+        {
+            "name": "dense_3",
+            "weights_shape": [
+                200,
+                10
+            ],
+            "biases_shape": [
+                10
+            ]
+        }
+    ]
+}
