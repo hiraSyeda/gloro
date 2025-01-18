@@ -1,10 +1,6 @@
 import doitlib
 import numpy as np
-import tensorflow as tf
-from sys import stdout
-from PIL import Image
 import json
-import os
 
 import sys
 

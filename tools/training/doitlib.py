@@ -1,6 +1,12 @@
-import utils
 import numpy as np
 import tensorflow as tf
+
+
+def resize_image(input_size):
+    def resize_fn(image, label):
+        image = tf.image.resize(image, [input_size, input_size])
+        return image, label
+    return resize_fn
 
 def build_mnist_model(Input, Flatten, Dense, input_size=28, internal_layer_sizes=[]):
     """set input_size to something smaller if the model is downsampled"""
@@ -30,21 +36,6 @@ def load_and_set_weights(csv_loc, internal_layer_sizes, model):
                   loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
                   metrics=['accuracy'])
 
-
-    
-def load_mnist_gloro_data(batch_size=256, augmentation='none', input_size=28):
-    """set input_size to resize the dataset. Returns a pair (train, test)"""
-    train, test, metadata = utils.get_data('mnist', batch_size, augmentation)
-
-    
-    if input_size != 28:
-        def resize(image, label):
-            image = tf.image.resize(image, [input_size, input_size])  
-            return image, label
-        train = train.map(resize)
-        test = test.map(resize)
-        
-    return (train, test)
     
 def load_mnist_test_data(input_size=28):
     """set input_size to resize the test dataset. Returns a pair (x_test, y_test)"""

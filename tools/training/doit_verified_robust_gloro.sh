@@ -1,21 +1,28 @@
 # train a gloro net
 
-if ! ([ $# -eq 7 ] || [ $# -eq 8 ]); then
-    echo "Usage $0 gloro_epsilon INTERNAL_LAYER_SIZES eval_epsilon robustness_certifier_binary GRAM_ITERATIONS epochs batch_size [model_input_size]"
+if ! ([ $# -eq 8 ] || [ $# -eq 9 ]); then
+    echo "Usage $0 dataset gloro_epsilon INTERNAL_LAYER_SIZES eval_epsilon robustness_certifier_binary GRAM_ITERATIONS epochs batch_size [model_input_size]"
     exit 1
 fi
 
-EPSILON=$1
-INTERNAL_LAYER_SIZES=$2
-EVAL_EPSILON=$3
-CERTIFIER=$4
-GRAM_ITERATIONS=$5
-EPOCHS=$6
-BATCH_SIZE=$7
+DATASET=$1
+EPSILON=$2
+INTERNAL_LAYER_SIZES=$3
+EVAL_EPSILON=$4
+CERTIFIER=$5
+GRAM_ITERATIONS=$6
+EPOCHS=$7
+BATCH_SIZE=$8
 
 INPUT_SIZE=28
-if [ $# -eq 8 ]; then
-    INPUT_SIZE=$8
+if [ $# -eq 9 ]; then
+    INPUT_SIZE=$9
+fi
+
+DATASET_LOWER=$(echo "$DATASET" | tr '[:upper:]' '[:lower:]')
+if [[ "$DATASET_LOWER" != "mnist" && "$DATASET_LOWER" != "cifar" ]]; then
+    echo "Error: Dataset must be either 'mnist' or 'cifar'."
+    exit 1
 fi
 
 if ! [[ $GRAM_ITERATIONS =~ ^[0-9]+$ ]] || [ "$GRAM_ITERATIONS" -le 0 ]; then
@@ -100,6 +107,7 @@ echo "Artifacts and results will live in: ${DT}/"
 echo ""
 
 PARAMS_FILE=${DT}/params.txt
+echo "    (Global) Dataset: ${DATASET}" > "${PARAMS_FILE}"
 echo "    (Global) Model input size: ${INPUT_SIZE}x${INPUT_SIZE}" > "${PARAMS_FILE}"
 echo "    (Training) Gloro epsilon: ${EPSILON}" >> "${PARAMS_FILE}"
 echo "    (Training) INTERNAL_LAYER_SIZES: ${INTERNAL_LAYER_SIZES}" >> "${PARAMS_FILE}"
@@ -123,7 +131,7 @@ RESULTS_JSON="${DT}/results_epsilon_${EPSILON}_${INTERNAL_LAYER_SIZES}_${EPOCHS}
 
 
 # train the gloro model
-${PYTHON} nn-mnist.py $EPSILON "$INTERNAL_LAYER_SIZES" $EPOCHS $INPUT_SIZE
+${PYTHON} train_gloro.py $DATASET $EPSILON "$INTERNAL_LAYER_SIZES" $EPOCHS $INPUT_SIZE
 
 if [ ! -d model_weights_csv ]; then
     echo "Training gloro model failed or results not successfully saved to model_weights_csv/ dir"

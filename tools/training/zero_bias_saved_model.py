@@ -1,12 +1,6 @@
 import doitlib
-import numpy as np
 import tensorflow as tf
-from sys import stdout
-from PIL import Image
-import os
-
 import sys
-
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Flatten, Dense, Layer
 
@@ -66,7 +60,12 @@ def printlist(floatlist):
             if count<n:
                 mprint(",")
 
-inputs, outputs = doitlib.build_mnist_model(Input, Flatten, Dense, input_size=input_size, internal_layer_sizes=INTERNAL_LAYER_SIZES)
+inputs, outputs = doitlib.build_mnist_model(
+    Input,
+    Flatten,
+    Dense,
+    input_size=input_size,
+    internal_layer_sizes=INTERNAL_LAYER_SIZES)
 model = Model(inputs, outputs)
 
 print("Building zero-bias gloro model from saved weights...")
@@ -90,18 +89,10 @@ print("Generating output vectors from the test (evaluation) data...")
 outputs = model.predict(x_test)
 n=len(outputs)
 
-#print(f"We have {n} test outputs we could try the certifier on.")
-#print("How many do you want?")
-#user_input = int(input(f"Enter a number between 0 and {n}: "))
 user_input=n
 
 # Check if input is in the range
 if 0 <= user_input <= n:
-
-
-    # Create a directory to save the images
-    #output_dir = "mnist_images"
-    #os.makedirs(output_dir, exist_ok=True)
     
     saved_stdout=sys.stdout
     with open(output_file,'w') as f:
@@ -110,17 +101,7 @@ if 0 <= user_input <= n:
         for i in range(user_input):
             test_output = outputs[i].tolist()
             printlist(test_output)
-            #mprint(" ")
-            #mprint(epsilon)
             mprint("\n")
-
-            # Get the image data
-            #image_array = x_test_orig[i]    
-            # Convert the image array to a PIL Image object
-            #image = Image.fromarray(image_array)    
-            # Save the image to a file
-            #output_path = os.path.join(output_dir, f"mnist_image_{i}.png")
-            #image.save(output_path)
     sys.stdout=saved_stdout
 else:
     print("Invalid number entered. No outputs for you!")

@@ -20,9 +20,7 @@
    ```
 
 4. **Run the script**  
-   ```bash
-   python nn-dense-mnist.py
-   ```
+TODO:
 Outputs are stored in the outputs/ folder.
 
 
