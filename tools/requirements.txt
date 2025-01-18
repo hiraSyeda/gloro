@@ -1,2 +1,4 @@
 tensorflow-datasets
 scriptify
+mpmath
+art

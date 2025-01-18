@@ -1,0 +1,14 @@
+file_format_version = "1.0"
+dafny_version = "4.9.2.0"
+[options_by_module.Wrappers]
+legacy-module-names = false
+[options_by_module.FileIO]
+legacy-module-names = false
+[options_by_module.StringUtils]
+legacy-module-names = false
+[options_by_module.BasicArithmetic]
+legacy-module-names = false
+[options_by_module.Lipschitz]
+legacy-module-names = false
+[options_by_module.MainModule]
+legacy-module-names = false
