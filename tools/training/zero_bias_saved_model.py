@@ -1,109 +1,90 @@
+import argparse
+
 import doitlib
 import tensorflow as tf
 import sys
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Flatten, Dense, Layer
 
-# currently unused
-class MinMax(Layer):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
 
-        self._flat_op = Flatten()
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("internal_layer_sizes", type=str)
+    parser.add_argument("model_weights_csv_dir", type=str)
+    parser.add_argument("output_file", type=str)
+    parser.add_argument("input_size", type=int)
+    return parser.parse_args()
 
-    def call(self, x):
-        x_flat = self._flat_op(x)
-        x_shape = tf.shape(x_flat)
+def main():
+    args = parse_arguments()
 
-        grouped_x = tf.reshape(
-            x_flat,
-            tf.concat([x_shape[:-1], (-1, 2)], -1))
+    INTERNAL_LAYER_SIZES = eval(args.internal_layer_sizes)
+    csv_loc = args.model_weights_csv_dir + "/"
+    output_file = args.output_file
+    input_size = args.input_size
 
-        min_x = tf.reduce_min(grouped_x, axis=-1, keepdims=True)
-        max_x = tf.reduce_max(grouped_x, axis=-1, keepdims=True)
-
-        sorted_x = tf.reshape(
-            tf.concat([min_x, max_x], axis=-1),
-            tf.shape(x))
-
-        return sorted_x
-
-    def lipschitz(self):
-        return 1.
-
-if len(sys.argv) != 5:
-    print(f"Usage: {sys.argv[0]} INTERNAL_LAYER_SIZES model_weights_csv_dir output_file input_size\n");
-    sys.exit(1)
-
-INTERNAL_LAYER_SIZES=eval(sys.argv[1])
-
-csv_loc=sys.argv[2]+"/"
-
-output_file=sys.argv[3]
-
-input_size=int(sys.argv[4])
-
-print(f"Running with internal layer dimensions: {INTERNAL_LAYER_SIZES}")
-print(f"Running with input_size: {input_size}")
+    print(f"Running with internal layer dimensions: {INTERNAL_LAYER_SIZES}")
+    print(f"Running with input_size: {input_size}")
 
 
-def mprint(string):
-    print(string, end="")
+    def mprint(string):
+        print(string, end="")
 
 
-def printlist(floatlist):
-        count=0
-        n=len(floatlist)
-        for num in floatlist:
-            mprint(f"{num:.5f}")
-            count=count+1
-            if count<n:
-                mprint(",")
+    def printlist(floatlist):
+            count=0
+            n=len(floatlist)
+            for num in floatlist:
+                mprint(f"{num:.5f}")
+                count=count+1
+                if count<n:
+                    mprint(",")
 
-inputs, outputs = doitlib.build_mnist_model(
-    Input,
-    Flatten,
-    Dense,
-    input_size=input_size,
-    internal_layer_sizes=INTERNAL_LAYER_SIZES)
-model = Model(inputs, outputs)
+    inputs, outputs = doitlib.build_mnist_model(
+        Input,
+        Flatten,
+        Dense,
+        input_size=input_size,
+        internal_layer_sizes=INTERNAL_LAYER_SIZES)
+    model = Model(inputs, outputs)
 
-print("Building zero-bias gloro model from saved weights...")
+    print("Building zero-bias gloro model from saved weights...")
 
-doitlib.load_and_set_weights(csv_loc, INTERNAL_LAYER_SIZES, model)
+    doitlib.load_and_set_weights(csv_loc, INTERNAL_LAYER_SIZES, model)
 
-# evaluate hte resulting model
-print("Evaluating the resulting zero-bias gloro model...")
+    # evaluate hte resulting model
+    print("Evaluating the resulting zero-bias gloro model...")
 
-x_test, y_test = doitlib.load_mnist_test_data(input_size=input_size)
+    x_test, y_test = doitlib.load_mnist_test_data(input_size=input_size)
 
-loss, accuracy = model.evaluate(x_test, y_test, verbose=2)
-
-
-print(f"Test Loss (zero bias model): {loss:.4f}")
-print(f"Test Accuracy (zero bias model): {accuracy:.4f}")
+    loss, accuracy = model.evaluate(x_test, y_test, verbose=2)
 
 
-print("Generating output vectors from the test (evaluation) data...")
+    print(f"Test Loss (zero bias model): {loss:.4f}")
+    print(f"Test Accuracy (zero bias model): {accuracy:.4f}")
 
-outputs = model.predict(x_test)
-n=len(outputs)
 
-user_input=n
+    print("Generating output vectors from the test (evaluation) data...")
 
-# Check if input is in the range
-if 0 <= user_input <= n:
-    
-    saved_stdout=sys.stdout
-    with open(output_file,'w') as f:
-        sys.stdout=f
-    
-        for i in range(user_input):
-            test_output = outputs[i].tolist()
-            printlist(test_output)
-            mprint("\n")
-    sys.stdout=saved_stdout
-else:
-    print("Invalid number entered. No outputs for you!")
-        
+    outputs = model.predict(x_test)
+    n=len(outputs)
 
+    user_input=n
+
+    # Check if input is in the range
+    if 0 <= user_input <= n:
+
+        saved_stdout=sys.stdout
+        with open(output_file,'w') as f:
+            sys.stdout=f
+
+            for i in range(user_input):
+                test_output = outputs[i].tolist()
+                printlist(test_output)
+                mprint("\n")
+        sys.stdout=saved_stdout
+    else:
+        print("Invalid number entered. No outputs for you!")
+
+if __name__ == "__main__":
+    main()

@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 
-
+# Utils before running the certifier, i.e. for training the gloro model
 def resize_image(input_size):
     def resize_fn(image, label):
         image = tf.image.resize(image, [input_size, input_size])
@@ -17,6 +17,7 @@ def build_mnist_model(Input, Flatten, Dense, input_size=28, internal_layer_sizes
     outputs = Dense(10)(z)
     return (inputs, outputs)
 
+# Utils for running the certifier, i.e. once the gloro model has been trained
 def load_and_set_weights(csv_loc, internal_layer_sizes, model):
     """model should already be built. This will compile it too"""
     dense_weights = []
