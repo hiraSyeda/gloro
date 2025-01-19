@@ -1,8 +1,26 @@
 import numpy as np
 import tensorflow as tf
 
+
+def mprint(string):
+    print(string, end="")
+
 def printlist(floatlist):
     print(",".join(f"{num:.5f}" for num in floatlist))
+
+def format_weights(weights):
+    weightslen = len(weights)
+    for w, mat in enumerate(weights):
+        mprint("[")
+        for r, row in enumerate(mat):
+            mprint("[")
+            mprint(",".join(f"{num:.5f}" for num in row))
+            mprint("]")
+            if r < len(mat) - 1:
+                mprint(",")
+        mprint("]")
+        if w < weightslen - 1:
+            mprint(",")
 
 # Utils before running the certifier, i.e. for training the gloro model
 def resize_image(input_size):
