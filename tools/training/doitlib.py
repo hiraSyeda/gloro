@@ -1,6 +1,9 @@
 import numpy as np
 import tensorflow as tf
 
+def printlist(floatlist):
+    print(",".join(f"{num:.5f}" for num in floatlist))
+
 # Utils before running the certifier, i.e. for training the gloro model
 def resize_image(input_size):
     def resize_fn(image, label):
