@@ -1,20 +1,18 @@
 import argparse
 import os
+
 import numpy as np
-from doitlib import resize_image, build_mnist_model
 import tensorflow as tf
-from gloro.utils import print_if_verbose
-from utils import get_data
-from utils import get_optimizer
-from gloro.models import GloroNet
-from gloro.layers import Dense
-from gloro.layers import Flatten
-from gloro.layers import Input
-from gloro.training import losses
 from tensorflow.keras import backend as K
-from gloro.training.callbacks import EpsilonScheduler
-from gloro.training.callbacks import LrScheduler
-from gloro.training.callbacks import TradesScheduler
+
+from doitlib import resize_image, build_mnist_model
+from gloro.layers import Dense, Flatten, Input
+from gloro.models import GloroNet
+from gloro.training import losses
+from gloro.training.callbacks import (
+    EpsilonScheduler, LrScheduler, TradesScheduler)
+from gloro.utils import print_if_verbose
+from utils import get_data, get_optimizer
 
 # Suppress TensorFlow info/warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'

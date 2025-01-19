@@ -1,8 +1,8 @@
-import numpy as np
 import os
+
+import numpy as np
 import tensorflow as tf
 import tensorflow_datasets as tfds
-
 from tensorflow.data import Dataset
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.optimizers import SGD

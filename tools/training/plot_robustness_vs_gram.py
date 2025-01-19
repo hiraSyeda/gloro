@@ -1,6 +1,7 @@
-import pandas as pd
-import matplotlib.pyplot as plt
 import sys
+
+import matplotlib.pyplot as plt
+import pandas as pd
 
 if len(sys.argv) != 5:
     print(f"Usage: {sys.argv[0]} graph_title csv_file upper_bound_txt_file output_pdf_file")

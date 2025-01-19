@@ -1,8 +1,9 @@
-import doitlib
-import numpy as np
 import json
-
 import sys
+
+import numpy as np
+
+import doitlib
 
 if len(sys.argv) != 5:
     print(f"Usage: {sys.argv[0]} INTERNAL_LAYER_SIZES certifier_results.json model_weights_csv_dir input_size\n");
