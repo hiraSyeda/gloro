@@ -5,7 +5,7 @@ import numpy as np
 from tensorflow.keras.layers import Input, Flatten, Dense
 from tensorflow.keras.models import Model
 
-from doitlib import build_mnist_model, load_and_set_weights, load_mnist_test_data
+from doitlib import build_model, load_and_set_weights, load_mnist_test_data
 
 
 def parse_arguments():
@@ -28,7 +28,7 @@ def main():
     print(f"Running with internal layer dimensions: {INTERNAL_LAYER_SIZES}")
     print(f"Running with input size: {input_size}")
 
-    inputs, outputs = build_mnist_model(
+    inputs, outputs = build_model(
         Input,
         Flatten,
         Dense,

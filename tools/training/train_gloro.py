@@ -5,7 +5,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras import backend as K
 
-from doitlib import resize_image, build_mnist_model
+from doitlib import resize_image, build_model
 from gloro.layers import Dense, Flatten, Input
 from gloro.models import GloroNet
 from gloro.training import losses
@@ -36,30 +36,37 @@ def train_gloro(
 ):
     _print = print_if_verbose(verbose)
 
-    # Load data and set up data pipeline.
-    _print('loading data...')
 
-    train, test, metadata = get_data(dataset, batch_size=256, augmentation='none')
+    if dataset.lower() == "cifar10":
+        _print('loading data...')
+        train, test, metadata = get_data(
+            dataset='cifar10',
+            batch_size=128,
+            augmentation='standard'
+        )
 
-    if dataset.lower() == "mnist":  # Ensure case insensitivity
+        if input_size != 32:  # CIFAR-10 default size is 32
+            train = train.map(resize_image(input_size))
+            test = test.map(resize_image(input_size))
+
+
+    if dataset.lower() == "mnist":
+        _print('loading data...')
+        train, test, metadata = get_data(dataset, batch_size=batch_size, augmentation=augmentation)
+
         if input_size != 28:
             train = train.map(resize_image(input_size))
             test = test.map(resize_image(input_size))
 
-        # Create the model.
-        _print('creating model...')
-
-        inputs, outputs = build_mnist_model(
-            Input,
-            Flatten,
-            Dense,
-            input_size=input_size,
-            internal_layer_sizes=INTERNAL_LAYER_SIZES)
-
-    else:
-        # Handle other datasets if required
-        print(f"Dataset '{dataset}' is not supported for this specific configuration.")
-        return None
+    _print('creating model...')
+    channels = 3 if dataset.lower() == "cifar10" else 1
+    inputs, outputs = build_model(
+        Input,
+        Flatten,
+        Dense,
+        input_size=input_size,
+        internal_layer_sizes=INTERNAL_LAYER_SIZES,
+        channels=channels)
 
     g = GloroNet(inputs, outputs, epsilon)
 
@@ -103,7 +110,6 @@ def script(
         lr=1e-3,
         lr_schedule='fixed',
         trades_schedule=None,
-        plot_learning_curve=False,
         INTERNAL_LAYER_SIZES=[64],
         input_size=28,
 ):
@@ -182,6 +188,9 @@ def main():
     epochs = args.epochs
     input_size = args.input_size
 
+    batch_size = 64 if dataset.lower() == 'cifar10' else 32
+    augmentation = 'standard' if dataset.lower() == 'cifar10' else 'none'
+
     print(f"Running with dataset: {dataset}")
     print(f"Running with internal layer dimensions: {internal_layers}")
 
@@ -189,12 +198,12 @@ def main():
         dataset=dataset,
         epsilon=epsilon,
         epsilon_schedule='fixed',
-        batch_size=32,
+        batch_size=batch_size,
         lr=1e-3,
         lr_schedule='decay_to_0.000001',
         epochs=epochs,
         loss='sparse_crossentropy',
-        augmentation='none',
+        augmentation=augmentation,
         INTERNAL_LAYER_SIZES=internal_layers,
         input_size=input_size)
 

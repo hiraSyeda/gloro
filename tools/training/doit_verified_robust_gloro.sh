@@ -14,6 +14,8 @@ GRAM_ITERATIONS=$6
 EPOCHS=$7
 BATCH_SIZE=$8
 
+# mnist 0.3 "[16]" 0.3 ./certifier/main 5 10 256 7
+
 INPUT_SIZE=28
 if [ $# -eq 9 ]; then
     INPUT_SIZE=$9

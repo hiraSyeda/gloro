@@ -29,9 +29,9 @@ def resize_image(input_size):
         return image, label
     return resize_fn
 
-def build_mnist_model(Input, Flatten, Dense, input_size=28, internal_layer_sizes=[]):
+def build_model(Input, Flatten, Dense, input_size=28, internal_layer_sizes=[], channels=1):
     """set input_size to something smaller if the model is downsampled"""
-    inputs = Input((input_size, input_size))
+    inputs = Input((input_size, input_size, channels))
     z = Flatten()(inputs)
     for size in internal_layer_sizes:
         z = Dense(size, activation='relu')(z)
